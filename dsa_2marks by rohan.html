@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DSA 2-Marks Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #181c26;
+    --border: #252a38;
+    --accent1: #f5c842;
+    --accent2: #4af0c4;
+    --accent3: #f06c6c;
+    --accent4: #7c9eff;
+    --text: #e8eaf0;
+    --muted: #7a809a;
+    --tag-bg: #1e2233;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* HEADER */
+  header {
+    max-width: 860px;
+    margin: 0 auto 3rem;
+    text-align: center;
+    position: relative;
+  }
+
+  header::before {
+    content: '';
+    display: block;
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    margin: 0 auto 1.5rem;
+    border-radius: 2px;
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 60%, var(--accent4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* UNIT SECTIONS */
+  .unit {
+    max-width: 860px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .unit-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .unit-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  .u1 { background: #f5c84222; color: var(--accent1); border: 1px solid #f5c84244; }
+  .u2 { background: #4af0c422; color: var(--accent2); border: 1px solid #4af0c444; }
+  .u3 { background: #f06c6c22; color: var(--accent3); border: 1px solid #f06c6c44; }
+  .u4 { background: #7c9eff22; color: var(--accent4); border: 1px solid #7c9eff44; }
+  .u5 { background: #c47cff22; color: #c47cff;        border: 1px solid #c47cff44; }
+
+  .unit-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Q&A CARDS */
+  .qa-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .qa-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .qa-card:hover {
+    border-color: #3a4060;
+    transform: translateY(-1px);
+  }
+
+  .qa-q {
+    padding: 0.85rem 1.1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+  }
+
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .q-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .q-arrow {
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 3px;
+    transition: transform 0.25s;
+  }
+
+  .qa-card.open .q-arrow { transform: rotate(90deg); color: var(--accent2); }
+  .qa-card.open .qa-q { background: #1a1f2e; }
+
+  .qa-body {
+    display: none;
+    padding: 1rem 1.1rem 1.1rem 2.5rem;
+    border-top: 1px solid var(--border);
+    animation: slideIn 0.2s ease;
+  }
+
+  .qa-card.open .qa-body { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-text {
+    font-size: 0.93rem;
+    line-height: 1.75;
+    color: #c8cce0;
+    margin-bottom: 0.75rem;
+  }
+
+  .example-box {
+    background: #0d1117;
+    border-left: 3px solid var(--accent2);
+    border-radius: 0 6px 6px 0;
+    padding: 0.65rem 0.9rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .example-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+  }
+
+  /* TOC */
+  .toc {
+    max-width: 860px;
+    margin: 0 auto 2.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.3rem;
+  }
+
+  .toc-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .toc-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .toc-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .toc-link.u1 { background: #f5c84215; color: var(--accent1); }
+  .toc-link.u2 { background: #4af0c415; color: var(--accent2); }
+  .toc-link.u3 { background: #f06c6c15; color: var(--accent3); }
+  .toc-link.u4 { background: #7c9eff15; color: var(--accent4); }
+  .toc-link.u5 { background: #c47cff15; color: #c47cff; }
+  .toc-link:hover { opacity: 0.7; }
+
+  /* EXPAND ALL BUTTON */
+  .ctrl-bar {
+    max-width: 860px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-expand {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-expand:hover { color: var(--accent2); border-color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DSA 2-Marks<br/>Study Guide</h1>
+  <p>Data Structures &amp; Algorithms · Quick Answers</p>
+</header>
+
+<nav class="toc">
+  <div class="toc-title">Units</div>
+  <div class="toc-list">
+    <a href="#u1" class="toc-link u1">I · Data Structures</a>
+    <a href="#u2" class="toc-link u2">II · Sorting &amp; Searching</a>
+    <a href="#u3" class="toc-link u3">III · Algorithms</a>
+    <a href="#u4" class="toc-link u4">IV · Trees</a>
+    <a href="#u5" class="toc-link u5">V · Graphs</a>
+  </div>
+</nav>
+
+<div class="ctrl-bar">
+  <button class="btn-expand" id="expandBtn" onclick="toggleAll()">Expand All ▾</button>
+</div>
+
+<!-- ═══════════════════════════════ UNIT I ═══════════════════════════════ -->
+<section class="unit" id="u1">
+  <div class="unit-header">
+    <span class="unit-badge u1">UNIT I</span>
+    <span class="unit-title">Data Structures</span>
+  </div>
+  <div class="qa-grid">
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Define Data Structure.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>data structure</strong> is a way of organizing and storing data in a computer so it can be accessed and modified efficiently. It defines the relationship between data and the operations that can be performed on it.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Array: [10, 20, 30, 40]
+→ Data is stored in a sequence, each element accessed by index.
+Types: Array, Stack, Queue, Tree, Graph, etc.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q2</span>
+        <span class="q-text">What is a Sparse Matrix?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>sparse matrix</strong> is a matrix where most of the elements are zero. Instead of storing all zeros (which wastes memory), only non-zero values are stored along with their row and column positions.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Matrix:         Stored as (row, col, value):
+0 0 3 0         (0, 2, 3)
+0 0 0 0    →    (2, 1, 7)
+0 7 0 0
+→ Only 2 values stored instead of 12!</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Define Stack and mention two applications.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>stack</strong> is a linear data structure that follows the <strong>LIFO</strong> (Last In, First Out) principle — the last element inserted is the first one removed. Operations: <em>push</em> (insert) and <em>pop</em> (remove).</p>
+        <div class="example-label">Applications</div>
+        <div class="example-box">1. Undo feature in text editors (Ctrl+Z)
+   → Last action done is undone first.
+2. Expression evaluation
+   → Converting infix to postfix uses a stack.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q4</span>
+        <span class="q-text">What is a Queue?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>queue</strong> is a linear data structure that follows the <strong>FIFO</strong> (First In, First Out) principle — the first element inserted is the first one removed. It has two ends: <em>front</em> (for removal) and <em>rear</em> (for insertion).</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Queue: Front → [10, 20, 30] ← Rear
+→ 10 was added first, so it leaves first.
+Real life: People waiting in a ticket line.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Define Linked List.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>linked list</strong> is a linear data structure where each element (called a <em>node</em>) contains two parts: the <strong>data</strong> and a <strong>pointer</strong> to the next node. Nodes are not stored in contiguous memory locations.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">[10 | •]→[20 | •]→[30 | NULL]
+ Node1       Node2       Node3
+Each node points to the next one in the chain.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Differentiate between Stack and Queue.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <div class="example-label">Comparison</div>
+        <div class="example-box">STACK                    QUEUE
+─────────────────────────────────────
+LIFO (Last In First Out) FIFO (First In First Out)
+One end (top)            Two ends (front & rear)
+push / pop               enqueue / dequeue
+Example: Undo in editor  Example: Printer job queue</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q7</span>
+        <span class="q-text">What is a Circular Linked List?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>circular linked list</strong> is a linked list in which the last node's pointer points back to the first node instead of NULL, forming a circle. There is no beginning or end.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">[10]→[20]→[30]
+  ↑_______________↓
+The last node (30) points back to 10.
+Used in: Round-robin CPU scheduling.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q8</span>
+        <span class="q-text">What is a Doubly Linked List?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>doubly linked list</strong> is a linked list where each node has two pointers: one pointing to the <strong>next</strong> node and one pointing to the <strong>previous</strong> node. You can traverse in both directions.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">NULL←[10]⇄[20]⇄[30]→NULL
+Each node has: prev | data | next
+Advantage: Can move forward AND backward.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ UNIT II ═══════════════════════════════ -->
+<section class="unit" id="u2">
+  <div class="unit-header">
+    <span class="unit-badge u2">UNIT II</span>
+    <span class="unit-title">Sorting &amp; Searching</span>
+  </div>
+  <div class="qa-grid">
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q9</span>
+        <span class="q-text">What is Sorting?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Sorting</strong> is the process of arranging data in a specific order — either ascending or descending. It makes searching faster and data easier to read.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Unsorted: [40, 10, 30, 20]
+Sorted (ascending): [10, 20, 30, 40]
+Algorithms: Bubble Sort, Quick Sort, Merge Sort</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q10</span>
+        <span class="q-text">What is Searching?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Searching</strong> is the process of finding a specific element (called the key) in a collection of data. It returns the position of the element if found, otherwise indicates it's not present.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Data: [10, 20, 30, 40]
+Search for 30 → Found at index 2
+Types: Linear Search, Binary Search</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q11</span>
+        <span class="q-text">Define Linear Search.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Linear search</strong> checks each element one by one from the beginning until the target is found or the list ends. It works on both sorted and unsorted data. Time complexity: <em>O(n)</em>.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Array: [5, 3, 8, 1, 9]  Search: 8
+Step 1: 5 == 8? No
+Step 2: 3 == 8? No
+Step 3: 8 == 8? Yes! Found at index 2.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q12</span>
+        <span class="q-text">Define Binary Search.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Binary search</strong> works on <em>sorted</em> arrays. It repeatedly divides the search range in half — if the middle element is the target, done; else search the left or right half. Time complexity: <em>O(log n)</em>.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Array: [1, 3, 5, 7, 9]  Search: 7
+Mid = 5. 7 > 5 → search right half [7, 9]
+Mid = 7. Found! Much faster than linear.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q13</span>
+        <span class="q-text">What is Hashing?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Hashing</strong> is a technique to convert a key into an index (called a hash code) using a hash function, so data can be stored and retrieved in <em>O(1)</em> constant time. The storage is called a <strong>hash table</strong>.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Key: "apple" → hash("apple") → index 3
+Store "apple" at table[3]
+Later: find "apple" instantly at table[3].</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q14</span>
+        <span class="q-text">What is a Hash Function?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>hash function</strong> is a mathematical formula that converts a key into a valid index for the hash table. A good hash function distributes keys evenly and minimizes collisions.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Hash function: h(key) = key % table_size
+Key = 25, Table size = 10
+h(25) = 25 % 10 = 5 → stored at index 5</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ UNIT III ═══════════════════════════════ -->
+<section class="unit" id="u3">
+  <div class="unit-header">
+    <span class="unit-badge u3">UNIT III</span>
+    <span class="unit-title">Algorithms</span>
+  </div>
+  <div class="qa-grid">
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q15</span>
+        <span class="q-text">What is Garbage Collection?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Garbage collection</strong> is the automatic process of reclaiming memory that is no longer being used by a program. It frees up memory occupied by objects/nodes that have no reference pointing to them.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Node A was deleted from a linked list.
+Its memory is still occupied.
+Garbage collector finds it → frees it
+→ Available for new use.
+Used in: Java, Python (automatic GC).</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q16</span>
+        <span class="q-text">What is Compaction?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Compaction</strong> is a memory management technique where all active/used memory blocks are moved together (compacted) to eliminate fragmentation and create one large block of free memory.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Before Compaction:
+[Used][Free][Used][Free][Used]
+After Compaction:
+[Used][Used][Used][Free Free  ]
+→ All free memory is now together.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q17</span>
+        <span class="q-text">Define Infix Expression.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">An <strong>infix expression</strong> is the standard way of writing arithmetic expressions where the operator is placed <em>between</em> the operands. Parentheses and precedence rules are used to determine the order of evaluation.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">A + B       → operator (+) between A and B
+(A + B) * C → normal math notation we use daily
+Needs precedence rules to evaluate correctly.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q18</span>
+        <span class="q-text">Define Postfix Expression.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>postfix expression</strong> (also called Reverse Polish Notation) places the operator <em>after</em> both operands. No parentheses or precedence rules are needed — computers evaluate it easily using a stack.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Infix:   A + B     → Postfix: A B +
+Infix:   (A + B)*C → Postfix: A B + C *
+Evaluation: Read left to right, use a stack.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ UNIT IV ═══════════════════════════════ -->
+<section class="unit" id="u4">
+  <div class="unit-header">
+    <span class="unit-badge u4">UNIT IV</span>
+    <span class="unit-title">Trees</span>
+  </div>
+  <div class="qa-grid">
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q19</span>
+        <span class="q-text">Define Tree.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>tree</strong> is a non-linear hierarchical data structure made of nodes connected by edges. It has one <em>root node</em> at the top, and every other node has exactly one parent. No cycles exist.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">        A         ← Root
+       / \
+      B   C     ← Children of A
+     / \
+    D   E       ← Children of B (Leaf nodes)</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q20</span>
+        <span class="q-text">What is a Binary Tree?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>binary tree</strong> is a tree in which each node has <em>at most two children</em>: a <strong>left child</strong> and a <strong>right child</strong>. It is the most commonly used tree structure.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">        1
+       / \
+      2   3
+     / \
+    4   5
+Each node has maximum 2 children.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q21</span>
+        <span class="q-text">What is a Binary Search Tree (BST)?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>BST</strong> is a binary tree with a special rule: for every node, all values in the <em>left subtree</em> are smaller, and all values in the <em>right subtree</em> are greater. This makes searching very efficient.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">        50
+       /  \
+      30   70
+     / \   / \
+    20 40  60 80
+Search 60: 60<50? No → go right → 60<70? Yes → go left → Found!</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q22</span>
+        <span class="q-text">What is an AVL Tree?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">An <strong>AVL tree</strong> is a self-balancing BST where the difference between heights of left and right subtrees (called the <em>balance factor</em>) is at most 1. If unbalanced, rotations are done to fix it.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Balance Factor = Height(left) - Height(right)
+Allowed values: -1, 0, +1
+If BF = 2 or -2 → tree rotates to rebalance.
+Ensures O(log n) operations always.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q23</span>
+        <span class="q-text">What is a B+ Tree?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>B+ tree</strong> is a balanced multi-level tree used in databases. All data is stored in the <em>leaf nodes</em>, and leaf nodes are linked together. Internal nodes only store keys for routing/searching.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Internal nodes: [10 | 20 | 30]  (only keys)
+Leaf nodes: [5,8]→[10,15]→[20,25]→[30,35]
+            └─── all linked ──────────────┘
+Used in: Database indexing (MySQL, etc.)</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q24</span>
+        <span class="q-text">Define Leaf Node.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>leaf node</strong> is a node in a tree that has <em>no children</em>. It is the bottommost node and represents the end of a branch. Also called an <em>external node</em> or <em>terminal node</em>.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">        A
+       / \
+      B   C   ← C is a leaf (no children)
+     / \
+    D   E   ← D and E are leaf nodes</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ UNIT V ═══════════════════════════════ -->
+<section class="unit" id="u5">
+  <div class="unit-header">
+    <span class="unit-badge u5">UNIT V</span>
+    <span class="unit-title">Graphs</span>
+  </div>
+  <div class="qa-grid">
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q25</span>
+        <span class="q-text">What is a Graph?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>graph</strong> is a non-linear data structure consisting of <em>vertices</em> (nodes) and <em>edges</em> (connections between nodes). Unlike trees, graphs can have cycles and a node can connect to any other node.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Vertices: A, B, C, D
+Edges: A-B, A-C, B-D, C-D
+  A — B
+  |   |
+  C — D
+Types: Directed, Undirected, Weighted</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q26</span>
+        <span class="q-text">Define BFS (Breadth First Search).</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>BFS</strong> visits all nodes level by level — first the starting node, then its direct neighbors, then their neighbors, and so on. It uses a <em>Queue</em> to keep track of nodes to visit.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Graph:   A — B — D
+         |
+         C — E
+BFS from A: A → B → C → D → E
+(Level 0: A, Level 1: B,C, Level 2: D,E)
+Used in: Shortest path, social networks.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q27</span>
+        <span class="q-text">Define DFS (Depth First Search).</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>DFS</strong> visits nodes by going as deep as possible along each branch before backtracking. It uses a <em>Stack</em> (or recursion) to track the path.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Graph:   A — B — D
+         |
+         C — E
+DFS from A: A → B → D → backtrack → C → E
+Goes deep first, then comes back.
+Used in: Maze solving, cycle detection.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q28</span>
+        <span class="q-text">What is Topological Sorting?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text"><strong>Topological sorting</strong> is a linear ordering of vertices in a <em>directed acyclic graph (DAG)</em> such that for every directed edge from U to V, U comes before V in the ordering. Used for task scheduling.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Tasks: "Get up" → "Brush" → "Eat" → "Go to college"
+Topological order: Get up, Brush, Eat, College
+Rule: A task must appear before tasks it leads to.
+Works only on DAGs (no cycles).</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q" onclick="toggle(this)">
+        <span class="q-num">Q29</span>
+        <span class="q-text">What is a Path Matrix?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="qa-body">
+        <p class="answer-text">A <strong>path matrix</strong> (also called a <em>reachability matrix</em>) is a matrix where entry <code>P[i][j] = 1</code> if there is a path from vertex i to vertex j, and <code>0</code> otherwise. It is derived from the adjacency matrix.</p>
+        <div class="example-label">Example</div>
+        <div class="example-box">Graph: A→B, B→C (A can reach C via B)
+Path Matrix:
+    A  B  C
+A [ 1  1  1 ]  ← A reaches A,B,C
+B [ 0  1  1 ]  ← B reaches B,C
+C [ 0  0  1 ]  ← C reaches only itself</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function toggle(el) {
+    const card = el.parentElement;
+    card.classList.toggle('open');
+  }
+
+  let allOpen = false;
+  function toggleAll() {
+    allOpen = !allOpen;
+    document.querySelectorAll('.qa-card').forEach(c => {
+      c.classList.toggle('open', allOpen);
+    });
+    document.getElementById('expandBtn').textContent = allOpen ? 'Collapse All ▴' : 'Expand All ▾';
+  }
+</script>
+</body>
+</html>
